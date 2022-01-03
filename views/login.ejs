@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+  />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="1021186784306-r4828ue44rrvqsoif7u2elc7htkgk0af.apps.googleusercontent.com">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div class="ui container" style="margin:200px auto; width: 400px; display: flex; flex-direction: column; align-items: center;">
+      <h1 class="header">Login</h1>
+      <div class="g-signin2" data-onsuccess="onSignIn"></div>
+      <a href="#" onclick="signOut();">Sign out</a>
+    </div>
+
+
+    <script>
+      function onSignIn(googleUser) {
+        var id_token = googleUser.getAuthResponse().id_token;
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/login');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function() {
+          console.log('Signed in as: ' + xhr.responseText);
+          if (xhr.responseText == 'success') {
+            signOut();
+            location.assign('/dashboard')
+          }
+        };
+        xhr.send(JSON.stringify({token: id_token}));
+      }
+    </script>
+
+    <script>
+      function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+          console.log('User signed out.');
+        });
+      }
+    </script>
+  </body>
+</html>
